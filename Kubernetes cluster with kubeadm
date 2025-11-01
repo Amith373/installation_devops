@@ -91,6 +91,9 @@ kubectl get nodes
 kubectl get pods -A
 #all pods should be running
 
+#Run in Master node and then the generated tocker and command will past it to Worker nodes
+kubeadm token create --print-join-command
+
 *****************************************************************************
 
 
@@ -102,8 +105,9 @@ Below block of steps only on Worker
 #On each worker node, run the command shown at the end of kubeadm init, e.g.:
 #below command should be picked from ur kubeadm init command output
 
-sudo kubeadm join 192.168.56.10:6443 --token <token> \
-    --discovery-token-ca-cert-hash sha256:<hash>
+kubeadm join 172.31.3.70:6443 --token 3qvny9.kh6tiwnm4vdq4w3x 
+--discovery-token-ca-cert-hash sha256:e0ea8548d47c17446c9a4ec2a4636e072f1723eadcc52fb860edae3fca30b635
+
 
 *****************************************************************************
 

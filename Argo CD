@@ -17,7 +17,7 @@
           Vj4b0-tF2or54ZGF  -> Paste Password
 
 5.Register A Cluster To Deploy Apps To (Optional)
-    a. Login to Argocd from CLI->  argocd login 13.201.81.76:30271
+    a. Login to Argocd from CLI->  argocd login 13.201.81.76:30271 {Public IPv4 address}              
           admin & Passwrd (Vj4b0-tF2or54ZGF)
     b. Add kube-config to argocd cluster
           - Get the kube-context to add to argocd

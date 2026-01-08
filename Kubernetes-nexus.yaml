@@ -1,3 +1,9 @@
+kubectl create namespace nexus
+Created an Namespace of Nexus
+
+
+kubectl get namespaces
+--------------------------------------------------------------------------------------------------------------
 apiVersion: apps/v1
     kind: Deployment
     metadata:

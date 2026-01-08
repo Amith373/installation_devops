@@ -55,6 +55,13 @@ sudo apt-mark hold kubelet kubeadm kubectl
 
 sudo systemctl enable --now kubelet
 
+sudo apt update
+sudo apt install -y conntrack
+
+
+which conntrack
+conntrack -V
+
 ********************************************************************************
 
 Once all the above steps are done on all the nodes, run below commands on mentioned nodes
@@ -65,16 +72,6 @@ Once all the above steps are done on all the nodes, run below commands on mentio
 Below block of steps only on master
 
 *********************************only on master************************************************
-
-sudo apt update
-sudo apt install -y conntrack
-
-
-which conntrack
-conntrack -V
-
-
-
 
 sudo kubeadm init
 #When complete, you’ll see a kubeadm join ... command — copy that for joining workers.

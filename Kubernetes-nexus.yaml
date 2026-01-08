@@ -5,38 +5,39 @@ kubectl create namespace nexuss
 kubectl get namespaces
 --------------------------------------------------------------------------------------------------------------
 apiVersion: apps/v1
-    kind: Deployment
+kind: Deployment
+metadata:
+  name: nexus
+  namespace: nexus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nexus-server
+  template:
     metadata:
-      name: nexus
-      namespace: nexus
+      labels:
+        app: nexus-server
     spec:
-      replicas: 1
-      selector:
-        matchLabels:
-            app: nexus-server
-      template:
-        metadata:
-          labels:
-            app: nexus-server
-        spec:
-          containers:
-            - name: nexus
-              image: sonatype/nexus3:latest
-              resources:
-                limits:
-                  memory: "4Gi"
-                  cpu: "1000m"
-                requests:
-                  memory: "2Gi"
-                  cpu: "500m"
-              ports:
-                - containerPort: 8081
-              volumeMounts:
-                - name: nexus-data
-                  mountPath: /nexus-data
-          volumes:
+      containers:
+        - name: nexus
+          image: sonatype/nexus3:latest
+          resources:
+            limits:
+              memory: "4Gi"
+              cpu: "1000m"
+            requests:
+              memory: "2Gi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8081
+          volumeMounts:
             - name: nexus-data
-              emptyDir: {}
+              mountPath: /nexus-data
+      volumes:
+        - name: nexus-data
+          emptyDir: {}
+
 
 ------------------------------------------------------------------------
 apiVersion: v1

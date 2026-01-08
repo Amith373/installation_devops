@@ -1,5 +1,5 @@
-kubectl create namespace nexus
 #Created an Namespace of Nexus
+kubectl create namespace nexuss
 
 
 kubectl get namespaces

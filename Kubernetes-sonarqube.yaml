@@ -2,9 +2,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: sonar-data-pv-volume
-  labels:
-    type: local
+  name: sonar-data-pv
 spec:
   storageClassName: manual
   capacity:
@@ -12,14 +10,12 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/mnt/data"
+    path: /mnt/data/sonarqube-data
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: sonar-extensions-pv-volume
-  labels:
-    type: local
+  name: sonar-extensions-pv
 spec:
   storageClassName: manual
   capacity:
@@ -27,15 +23,15 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/mnt/data"
+    path: /mnt/data/sonarqube-extensions
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: sonar-data-claim
+  name: sonar-data-pvc
 spec:
-  volumeName: "sonar-data-pv-volume"
   storageClassName: manual
+  volumeName: sonar-data-pv
   accessModes:
     - ReadWriteOnce
   resources:
@@ -45,10 +41,10 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: sonar-extensions-claim
+  name: sonar-extensions-pvc
 spec:
-  volumeName: "sonar-extensions-pv-volume"
   storageClassName: manual
+  volumeName: sonar-extensions-pv
   accessModes:
     - ReadWriteOnce
   resources:
@@ -74,48 +70,30 @@ spec:
       containers:
         - name: sonarqube
           image: sonarqube:8.9-community
+          ports:
+            - containerPort: 9000
           env:
             - name: SONAR_ES_BOOTSTRAP_CHECKS_DISABLE
               value: "true"
           resources:
             requests:
-              cpu: 500m
-              memory: 1024Mi
+              cpu: "500m"
+              memory: "1024Mi"
             limits:
-              cpu: 2000m
-              memory: 2048Mi
+              cpu: "2000m"
+              memory: "2048Mi"
           volumeMounts:
             - name: sonar-data
               mountPath: /opt/sonarqube/data
-              subPath: sonarqube-data
             - name: sonar-extensions
               mountPath: /opt/sonarqube/extensions
-              subPath: sonarqube-extensions
       volumes:
         - name: sonar-data
           persistentVolumeClaim:
-            claimName: sonar-data-claim
+            claimName: sonar-data-pvc
         - name: sonar-extensions
           persistentVolumeClaim:
-            claimName: sonar-extensions-claim
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: sonarqube
-  annotations:
-    ingress.kubernetes.io/ssl-redirect: "false"
-spec:
-  rules:
-    - http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: sonarqube
-                port:
-                  number: 9000
+            claimName: sonar-extensions-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -130,3 +108,20 @@ spec:
       targetPort: 9000
       nodePort: 30000
       protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sonarqube
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sonarqube
+                port:
+                  number: 9000

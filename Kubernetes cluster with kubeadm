@@ -66,6 +66,16 @@ Below block of steps only on master
 
 *********************************only on master************************************************
 
+sudo apt update
+sudo apt install -y conntrack
+
+
+which conntrack
+conntrack -V
+
+
+
+
 sudo kubeadm init
 #When complete, you’ll see a kubeadm join ... command — copy that for joining workers.
 

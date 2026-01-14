@@ -11,6 +11,8 @@
       sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
       rm argocd-linux-amd64
 
+After K8s Master Node Public ID copy and past : argocd-server port in (Browser)
+
 4.Login to argocd with user - "admin"
   To hey password:
      argocd admin initial-password -n argocd
